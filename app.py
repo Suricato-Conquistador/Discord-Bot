@@ -8,6 +8,8 @@ intents.message_content = True
 
 client = discord.Client(intents=intents)
 
+banco = []
+
 @client.event
 async def on_ready():
     print(f"Entramos como {client.user}.")
@@ -19,21 +21,43 @@ async def on_message(message):
     
     objComandos = [{'comando':'!help', 'descricao': 'Mostra todos os comandos presentes no BOT'}, 
                    {'comando': '!addJogo', 'descricao': 'Adiciona um jogo ao sistema do BOT'}, 
-                   {'comando': '!addPartida', 'descricao': 'Adiciona uma partida a um jogo ja existente'}, 
+                   {'comando': '!mostrarJogos', 'descricao': 'Mostra os jogos já adicionados ao BOT'}, 
+                   {'comando': '!addPartida', 'descricao': 'Adiciona uma partida a um jogo já existente'}, 
                    {'comando': '!addMDX', 'descricao': 'Adiciona uma melhor de x e qual foram os vencedores'}]
-    msg = message.content.split(' ')[0]
+    msg = message.content.split(' ')
     if message.content.startswith('!'):
         
-        match msg:
+        match msg[0]:
             case "!help":
                 resposta = '----------------------------------------------------------------------\n\n'
                 for c in objComandos:
                     resposta += f'{c["comando"]} : {c["descricao"]}\n'
                 resposta+='\n----------------------------------------------------------------------'
                 await message.channel.send(resposta)
+
+            case "!addJogo":
+                jogo = ' '.join(msg[1:])
+                banco.append(jogo)
+                print(banco)
+                await message.channel.send(f"O jogo {jogo.capitalize()} foi inserido com sucesso")
+            
+            case "!addPartida":
+                resposta = '----------------------------------------------------------------------\n\n'
+
+            case "!mostrarJogos":
+                resposta = '----------------------------------------------------------------------\n\n'
+                if len(banco) > 0:
+                    for c in banco:
+                        resposta += f'{c}\n'
+                else:
+                    resposta += "O BOT ainda não possui jogos cadastrados\n"
+                resposta+='\n----------------------------------------------------------------------'
+                await message.channel.send(resposta)
+
+
             
             case _:
-                await message.channel.send("Comando não existente, tente !help para ver o comandos válido")
+                await message.channel.send("Comando não existente, tente !help para ver o comandos válidos")
                 
 
     
@@ -43,9 +67,6 @@ async def on_message(message):
     #     await message.channel.send("Vai tomar no seu cu PORRA")
     
             
-    
-
-
 
 # @client.event
 # async def on_message(message):
