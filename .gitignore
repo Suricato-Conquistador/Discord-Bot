@@ -1,1 +1,3 @@
 /venv/
+/projeto/db.py
+/projeto/__pycache__

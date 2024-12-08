@@ -1,5 +1,7 @@
 import discord
 from discord import app_commands
+from .db import get_database_connection
+
 
 id_do_servidor = 1249464842134229013
 
@@ -22,7 +24,9 @@ async def on_message(message):
     objComandos = [{'comando':'!help', 'descricao': 'Mostra todos os comandos presentes no BOT'}, 
                    {'comando': '!addJogo', 'descricao': 'Adiciona um jogo ao sistema do BOT'}, 
                    {'comando': '!mostrarJogos', 'descricao': 'Mostra os jogos já adicionados ao BOT'}, 
-                   {'comando': '!addPartida', 'descricao': 'Adiciona uma partida a um jogo já existente'}, 
+                   {'comando': '!addUser', 'descricao': 'Adiciona um usuário para a lista'}, 
+                   {'comando': '!mostrarUsers', 'descricao': 'Mostra os usuários já adicionados ao BOT'}, 
+                #    {'comando': '!addPartida', 'descricao': 'Adiciona uma partida a um jogo já existente'}, 
                    {'comando': '!addMDX', 'descricao': 'Adiciona uma melhor de x e qual foram os vencedores'}]
     msg = message.content.split(' ')
     if message.content.startswith('!'):
@@ -41,7 +45,7 @@ async def on_message(message):
                 print(banco)
                 await message.channel.send(f"O jogo {jogo.capitalize()} foi inserido com sucesso")
             
-            case "!addPartida":
+            case "!addMDX":
                 resposta = '----------------------------------------------------------------------\n\n'
 
             case "!mostrarJogos":
@@ -66,7 +70,7 @@ async def on_message(message):
     # else:
     #     await message.channel.send("Vai tomar no seu cu PORRA")
     
-            
+
 
 # @client.event
 # async def on_message(message):
@@ -80,5 +84,25 @@ async def on_message(message):
 # async def slash2(interaction: discord.Interaction):
 #     await interaction.response.send_message(f'{interaction.type} ', ephemeral=False)
 
+
+
 # Inicia o bot com o token fornecido
-client.run('MTI0OTQ3MTIxOTE0MTQ0MzY4Ng.GyhIS4.dNsCKzAJIdwHOVEgG7xnhhWx2xQrFF65bc7bjs')
+client.run('')
+
+
+# BANCO DE DADOS
+
+def consultarJogos():
+    connection = get_database_connection()
+    cursor = connection.cursor()
+    query = "SELECT * FROM jogos"
+    cursor.execute(query)
+    resultado = cursor.fetchone()
+    cursor.close()
+    connection.close()
+    return resultado
+
+def inserirJogo():
+    pass
+
+print(consultarJogos())
