@@ -1,6 +1,8 @@
 import discord
+import mysql.connector
 from discord import app_commands
-from .db import get_database_connection
+from .db import secret_token
+from .banco.querys import *
 
 
 id_do_servidor = 1249464842134229013
@@ -9,8 +11,6 @@ intents = discord.Intents.default()
 intents.message_content = True
 
 client = discord.Client(intents=intents)
-
-banco = []
 
 @client.event
 async def on_ready():
@@ -26,8 +26,8 @@ async def on_message(message):
                    {'comando': '!mostrarJogos', 'descricao': 'Mostra os jogos já adicionados ao BOT'}, 
                    {'comando': '!addUser', 'descricao': 'Adiciona um usuário para a lista'}, 
                    {'comando': '!mostrarUsers', 'descricao': 'Mostra os usuários já adicionados ao BOT'}, 
-                #    {'comando': '!addPartida', 'descricao': 'Adiciona uma partida a um jogo já existente'}, 
-                   {'comando': '!addMDX', 'descricao': 'Adiciona uma melhor de x e qual foram os vencedores'}]
+                   {'comando': '!addMDX', 'descricao': 'Adiciona uma melhor de x e qual foram os vencedores'},
+                   {'comando': '!addPartida', 'descricao': 'Adiciona uma partida de uma MDX'}]
     msg = message.content.split(' ')
     if message.content.startswith('!'):
         
@@ -41,18 +41,18 @@ async def on_message(message):
 
             case "!addJogo":
                 jogo = ' '.join(msg[1:])
-                banco.append(jogo)
-                print(banco)
-                await message.channel.send(f"O jogo {jogo.capitalize()} foi inserido com sucesso")
+                inserir_jogo(jogo)
+                await message.channel.send(f"O jogo {jogo.title()} foi inserido com sucesso")
             
             case "!addMDX":
                 resposta = '----------------------------------------------------------------------\n\n'
 
             case "!mostrarJogos":
                 resposta = '----------------------------------------------------------------------\n\n'
-                if len(banco) > 0:
-                    for c in banco:
-                        resposta += f'{c}\n'
+                jogos = consultar_jogos()
+                if len(jogos) > 0:
+                    for c in jogos:
+                        resposta += f'{c[1]}\n'
                 else:
                     resposta += "O BOT ainda não possui jogos cadastrados\n"
                 resposta+='\n----------------------------------------------------------------------'
@@ -87,22 +87,6 @@ async def on_message(message):
 
 
 # Inicia o bot com o token fornecido
-client.run('')
+client.run(secret_token)
 
 
-# BANCO DE DADOS
-
-def consultarJogos():
-    connection = get_database_connection()
-    cursor = connection.cursor()
-    query = "SELECT * FROM jogos"
-    cursor.execute(query)
-    resultado = cursor.fetchone()
-    cursor.close()
-    connection.close()
-    return resultado
-
-def inserirJogo():
-    pass
-
-print(consultarJogos())
