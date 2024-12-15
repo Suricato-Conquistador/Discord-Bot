@@ -27,7 +27,7 @@ def inserir_jogo(nome):
     try:
         cursor.execute(query_insert, values)
         connection.commit()
-        print("DEU SERTO :)")
+        # print("DEU SERTO :)")
     except mysql.connector.Error as error:
             print(f'Erro ao inserir o jogo: {error}', 'error')
     finally:
@@ -61,9 +61,66 @@ def inserir_users(nome):
     try:
         cursor.execute(query_insert, values)
         connection.commit()
-        print("DEU SERTO :)")
+        # print("DEU SERTO :)")
     except mysql.connector.Error as error:
             print(f'Erro ao inserir o user: {error}', 'error')
     finally:
         cursor.close()
         connection.close()
+
+
+# MDX
+
+
+def consultar_mdx():
+    pass
+
+def inserir_mdx(mdx, jogo, user1, user2):
+    connection = get_database_connection()
+    cursor = connection.cursor()
+    id_jogo = consultar_id_jogo(jogo)
+    id_u1, id_u2 = consultar_id_user(user1), consultar_id_user(user2)
+    query_insert = "INSERT INTO mdx(mdx, id_jogo, id_user1, id_user2) VALUES (%s, %s, %s, %s)"
+    values = (mdx, id_jogo, id_u1, id_u2)
+    try:
+        cursor.execute(query_insert, values)
+        connection.commit()
+        # print("DEU SERTO :)")
+    except mysql.connector.Error as error:
+            print(f'Erro ao inserir o user: {error}', 'error')
+    finally:
+        cursor.close()
+        connection.close()
+
+
+
+def consultar_id_jogo(jogo):
+    connection = get_database_connection()
+    cursor = connection.cursor()
+    query = "SELECT id FROM jogos WHERE nome = %s"
+    values = (jogo,)
+    try:
+        cursor.execute(query, values)
+        resultado = cursor.fetchone()
+    except mysql.connector.Error as error:
+            print(f'Erro ao consultar os users: {error}', 'error')
+    finally:
+        cursor.close()
+        connection.close()
+    return resultado[0]
+
+
+def consultar_id_user(user):
+    connection = get_database_connection()
+    cursor = connection.cursor()
+    query = "SELECT id FROM users WHERE nome = %s"
+    values = (user,)
+    try:
+        cursor.execute(query, values)
+        resultado = cursor.fetchone()
+    except mysql.connector.Error as error:
+            print(f'Erro ao consultar os users: {error}', 'error')
+    finally:
+        cursor.close()
+        connection.close()
+    return resultado[0]

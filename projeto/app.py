@@ -32,6 +32,7 @@ async def on_message(message):
     if message.content.startswith('!'):
         
         match msg[0]:
+            # Caso o usuário digite !help, o bot irá mostrar todos os seus comandos
             case "!help":
                 resposta = '----------------------------------------------------------------------\n\n'
                 for c in objComandos:
@@ -40,24 +41,45 @@ async def on_message(message):
                 await message.channel.send(resposta)
 
             case "!addJogo":
-                jogo = ' '.join(msg[1:])
+                jogo = ' '.join(msg[1:]).strip()
                 inserir_jogo(jogo)
                 await message.channel.send(f"O jogo {jogo.title()} foi inserido com sucesso")
             
             case "!addMDX":
-                resposta = '----------------------------------------------------------------------\n\n'
+                print("VOU INSEREIR")
+                user1, user2 = msg[-2], msg[-1]
+                mdx = msg[1]
+                jogo = ' '.join(msg[2:-2])
+                print(jogo)
+                inserir_mdx(mdx, jogo, user1, user2)
+                await message.channel.send(f"A melhor de {mdx} entre {user1} e {user2} no {jogo.title()} foi criada com sucesso")
 
             case "!mostrarJogos":
-                resposta = '----------------------------------------------------------------------\n\n'
                 jogos = consultar_jogos()
                 if len(jogos) > 0:
+                    resposta = '----------------------------------------------------------------------\n\n'
                     for c in jogos:
                         resposta += f'{c[1]}\n'
+                    resposta+='\n----------------------------------------------------------------------'
                 else:
-                    resposta += "O BOT ainda não possui jogos cadastrados\n"
-                resposta+='\n----------------------------------------------------------------------'
+                    resposta = "O BOT ainda não possui jogos cadastrados"
                 await message.channel.send(resposta)
 
+            case "!addUser":
+                user = msg[1].strip()
+                inserir_users(user)
+                await message.channel.send(f"O user {user} foi inserido com sucesso")
+
+            case "!mostrarUsers":
+                users = consultar_users()
+                if len(users) > 0:
+                    resposta = '----------------------------------------------------------------------\n\n'
+                    for c in users:
+                        resposta += f'{c[0]} - {c[1]}\n'
+                    resposta+='\n----------------------------------------------------------------------'
+                else:
+                    resposta = "O BOT ainda não possui users cadastrados"
+                await message.channel.send(resposta)
 
             
             case _:
@@ -77,12 +99,12 @@ async def on_message(message):
 #     if message.content.startswith('!entrar'):
 #         print("oi")
 
-# Cria a instância do cliente
-# tree = app_commands.CommandTree(aclient)
+# # Cria a instância do cliente
+# tree = app_commands.CommandTree(client)
 
 # @tree.command(guild=discord.Object(id=id_do_servidor), name='teste', description='Testando') # Comando específico para seu servidor
 # async def slash2(interaction: discord.Interaction):
-#     await interaction.response.send_message(f'{interaction.type} ', ephemeral=False)
+#     await interaction.response.send_message(f'{interaction.user.id} ', ephemeral=False)
 
 
 
