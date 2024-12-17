@@ -53,11 +53,11 @@ def consultar_users():
     return resultado
 
 
-def inserir_users(nome):
+def inserir_users(nome, disc_id=0):
     connection = get_database_connection()
     cursor = connection.cursor()
-    query_insert = "INSERT INTO users(nome) VALUES (%s)"
-    values = (nome,)
+    query_insert = "INSERT INTO users(nome, id_discord) VALUES (%s, %s)"
+    values = (nome, disc_id)
     try:
         cursor.execute(query_insert, values)
         connection.commit()
@@ -73,7 +73,19 @@ def inserir_users(nome):
 
 
 def consultar_mdx():
-    pass
+    connection = get_database_connection()
+    cursor = connection.cursor()
+    query = "SELECT * FROM mdx"
+    try:
+        cursor.execute(query)
+        resultado = cursor.fetchall()
+    except mysql.connector.Error as error:
+        print(f'Erro ao consultar os users: {error}', 'error')
+    finally:
+        cursor.close()
+        connection.close()
+    return resultado
+    
 
 def inserir_mdx(mdx, jogo, user1, user2):
     connection = get_database_connection()
@@ -91,7 +103,6 @@ def inserir_mdx(mdx, jogo, user1, user2):
     finally:
         cursor.close()
         connection.close()
-
 
 
 def consultar_id_jogo(jogo):
@@ -124,3 +135,37 @@ def consultar_id_user(user):
         cursor.close()
         connection.close()
     return resultado[0]
+
+
+# Partida
+
+
+def consultar_partida():
+    connection = get_database_connection()
+    cursor = connection.cursor()
+    query = "SELECT * FROM partidas"
+    try:
+        cursor.execute(query)
+        resultado = cursor.fetchall()
+    except mysql.connector.Error as error:
+            print(f'Erro ao consultar os users: {error}', 'error')
+    finally:
+        cursor.close()
+        connection.close()
+    return resultado
+
+
+def inserir_partida(placar1, placar2, id_mdx):
+    connection = get_database_connection()
+    cursor = connection.cursor()
+    query_insert = "INSERT INTO partidas(placar1, placar2, id_mdx) VALUES (%s, %s, %s)"
+    values = (placar1, placar2, id_mdx)
+    try:
+        cursor.execute(query_insert, values)
+        connection.commit()
+        # print("DEU SERTO :)")
+    except mysql.connector.Error as error:
+            print(f'Erro ao inserir o user: {error}', 'error')
+    finally:
+        cursor.close()
+        connection.close()
