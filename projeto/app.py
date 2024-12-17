@@ -85,6 +85,7 @@ async def on_message(message):
 
             case "!addUser":
                 user = msg[1].strip()
+                print(user)
                 inserir_users(user)
                 await message.channel.send(f"O user {user} foi inserido com sucesso")
 
@@ -99,16 +100,12 @@ async def on_message(message):
                     resposta = "O BOT ainda não possui users cadastrados"
                 await message.channel.send(resposta)
 
-            case "!id":
-                interaction = discord.Interaction.user
-                await message.channel.send(interaction)
-
             case "!addPartida":
                 placar1, placar2 = msg[1], msg[2]
                 id_mdx = msg[3]
                 inserir_partida(placar1, placar2, id_mdx)
                 await message.channel.send(f"A partida terminou com o placar {placar1} x {placar2} e foi inserida com sucesso a MDX {id_mdx}")
-            
+             
             case _:
                 await message.channel.send("Comando não existente, tente !help para ver o comandos válidos")
                 
@@ -129,23 +126,10 @@ async def on_message(message):
 # # Cria a instância do cliente
 # tree = app_commands.CommandTree(client)
 
-# @tree.command(guild=discord.Object(id=id_do_servidor), name='help', description='Testando') # Comando específico para seu servidor
+# @tree.command(guild=discord.Object(id=id_do_servidor), name='teste', description='Testando') # Comando específico para seu servidor
 # async def slash2(interaction: discord.Interaction):
-#     resposta = '----------------------------------------------------------------------\n\n'
-#     for c in objComandos:
-#         resposta += f'{c["comando"]} : {c["descricao"]}\n'
-#     resposta+='\n----------------------------------------------------------------------'
-#     await interaction.response.send_message(f'{resposta} ', ephemeral=False)
+#     await interaction.response.send_message(f'{interaction.user.id} ', ephemeral=False)
 
-# @tree.command(guild=discord.Object(id=id_do_servidor), name='teste', description='Mostra os usuários') # Comando específico para seu servidor
-# async def slash2(interaction: discord.Interaction):
-#     resposta = '----------------------------------------------------------------------\n\n'
-#     for c in objComandos:
-#         resposta += f'{c["comando"]} : {c["descricao"]}\n'
-#     resposta+='\n----------------------------------------------------------------------'
-#     # await message.channel.send(resposta)
-#     # await interaction.response.send_message(f'{interaction.user.id} ', ephemeral=False)
-#     await interaction.response.send_message(f'aaaaa', ephemeral=False)
 
 
 # Inicia o bot com o token fornecido

@@ -75,7 +75,7 @@ def inserir_users(nome, disc_id=0):
 def consultar_mdx():
     connection = get_database_connection()
     cursor = connection.cursor()
-    query = "SELECT * FROM mdx"
+    query = "SELECT * FROM mdx WHERE mdx/2 > placar1 AND mdx/2 > placar2"
     try:
         cursor.execute(query)
         resultado = cursor.fetchall()
