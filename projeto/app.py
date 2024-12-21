@@ -32,7 +32,7 @@ async def on_message(message):
     if message.author == client.user:
         return
     
-    objComandos = [{'comando':'!help', 'descricao': 'Mostra todos os comandos presentes no BOT'}, 
+    objComandos = [{'comando': '!help', 'descricao': 'Mostra todos os comandos presentes no BOT'}, 
                    {'comando': '!addJogo', 'descricao': 'Adiciona um jogo ao sistema do BOT'}, 
                    {'comando': '!mostrarJogos', 'descricao': 'Mostra os jogos já adicionados ao BOT'}, 
                    {'comando': '!addUser', 'descricao': 'Adiciona um usuário para a lista'}, 
@@ -84,9 +84,9 @@ async def on_message(message):
                 await message.channel.send(resposta)
 
             case "!addUser":
-                user = msg[1].strip()
-                print(user)
-                inserir_users(user)
+                user_id = msg[1]
+                user = msg[2].strip()
+                inserir_users(user, user_id[2:-1])
                 await message.channel.send(f"O user {user} foi inserido com sucesso")
 
             case "!mostrarUsers":
@@ -101,6 +101,7 @@ async def on_message(message):
                 await message.channel.send(resposta)
 
             case "!addPartida":
+                # limitar com joins do banco de dados, pois se ja fechou n tem mais como inserir
                 placar1, placar2 = msg[1], msg[2]
                 id_mdx = msg[3]
                 inserir_partida(placar1, placar2, id_mdx)

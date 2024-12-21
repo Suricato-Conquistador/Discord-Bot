@@ -53,7 +53,7 @@ def consultar_users():
     return resultado
 
 
-def inserir_users(nome, disc_id=0):
+def inserir_users(nome, disc_id):
     connection = get_database_connection()
     cursor = connection.cursor()
     query_insert = "INSERT INTO users(nome, id_discord) VALUES (%s, %s)"
